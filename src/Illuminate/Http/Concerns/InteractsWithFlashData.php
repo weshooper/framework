@@ -4,18 +4,20 @@ namespace Illuminate\Http\Concerns;
 
 use Illuminate\Database\Eloquent\Model;
 
+use function Illuminate\Support\enum_value;
+
 trait InteractsWithFlashData
 {
     /**
      * Retrieve an old input item.
      *
      * @param  string|null  $key
-     * @param  \Illuminate\Database\Eloquent\Model|string|array|null  $default
+     * @param  \Illuminate\Database\Eloquent\Model|\BackedEnum|string|array|null  $default
      * @return string|array|null
      */
     public function old($key = null, $default = null)
     {
-        $default = $default instanceof Model ? $default->getAttribute($key) : $default;
+        $default = $default instanceof Model ? $default->getAttribute($key) : enum_value($default);
 
         return $this->hasSession() ? $this->session()->getOldInput($key, $default) : $default;
     }
